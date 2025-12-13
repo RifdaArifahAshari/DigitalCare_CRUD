@@ -1,0 +1,10 @@
+{
+  "configurations": [
+    {
+      "name": "tugas_crud (Flutter Tests)",
+      "program": "test",
+      "request": "launch",
+      "type": "dart"
+    }
+  ]
+}
