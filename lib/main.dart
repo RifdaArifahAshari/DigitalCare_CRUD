@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tugas_crud/home.dart';
-// import 'package:crud_rifda/konsultasi.dart';
-// import 'package:crud_rifda/pembayaran.dart';
-// import 'package:crud_rifda/aktivitas.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const Home(),
+      home: const Home(), // Halaman awal adalah Login
     );
   }
 }
@@ -36,7 +34,27 @@ class _HomeState extends State<Home> {
   final TextEditingController usernameC = TextEditingController();
   final TextEditingController passwordC = TextEditingController();
 
-  bool _obscurePass = true; // <-- status show hide password
+  bool _obscurePass = true; // status sembunyikan password
+
+  void _handleLogin() {
+    // 1. Validasi Input Sederhana
+    if (usernameC.text.isEmpty || passwordC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Username dan Password tidak boleh kosong!"),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // 2. Navigasi Login (Gunakan pushReplacement)
+    // Agar user tidak bisa kembali ke login saat tekan tombol Back
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const HomePage()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +73,12 @@ class _HomeState extends State<Home> {
             end: Alignment.bottomCenter,
           ),
         ),
-
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // ============================
-                //      JUDUL APLIKASI
-                // ============================
+                // JUDUL APLIKASI
                 const Text(
                   "JagaRaga",
                   style: TextStyle(
@@ -83,9 +98,13 @@ class _HomeState extends State<Home> {
                 const SizedBox(height: 20),
 
                 // LOGO
-                Image(image: AssetImage('assets/images/rs.png'), height: 250),
+                // Pastikan file rs.png sudah didaftarkan di pubspec.yaml
+                const Image(
+                  image: AssetImage('assets/images/rs.png'),
+                  height: 200,
+                ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
 
                 // KOTAK LOGIN
                 Container(
@@ -94,7 +113,7 @@ class _HomeState extends State<Home> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black12,
                         blurRadius: 10,
@@ -102,7 +121,6 @@ class _HomeState extends State<Home> {
                       ),
                     ],
                   ),
-
                   child: Column(
                     children: [
                       // USERNAME
@@ -116,18 +134,15 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                       ),
-
                       const SizedBox(height: 20),
 
-                      // PASSWORD (ADA MATA)
+                      // PASSWORD
                       TextField(
                         controller: passwordC,
                         obscureText: _obscurePass,
                         decoration: InputDecoration(
                           labelText: "Password",
                           prefixIcon: const Icon(Icons.lock),
-
-                          // === Tombol mata ===
                           suffixIcon: IconButton(
                             icon: Icon(
                               _obscurePass
@@ -140,38 +155,34 @@ class _HomeState extends State<Home> {
                               });
                             },
                           ),
-
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                       ),
-
                       const SizedBox(height: 20),
 
                       // TOMBOL MASUK
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
-                        },
-
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1976D2),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 50,
-                            vertical: 12,
+                      SizedBox(
+                        width: double
+                            .infinity, // Agar tombol memenuhi lebar container
+                        child: ElevatedButton(
+                          onPressed: _handleLogin, // Panggil fungsi login
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF1976D2),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                          child: const Text(
+                            "Masuk",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-
-                        child: const Text(
-                          "Masuk",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ),
                     ],
